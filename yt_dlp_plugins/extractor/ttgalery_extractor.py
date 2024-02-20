@@ -9,20 +9,22 @@ from yt_dlp.extractor.tiktok import TikTokIE
 class TikTokGalleryIE(TikTokIE, plugin_name="TTGalery"):
     def _parse_aweme_video_app(self, aweme_detail):
         extracted = super()._parse_aweme_video_app(aweme_detail)
-        tt_gallery_slides = aweme_detail['image_post_info']['images']
 
-        if len(tt_gallery_slides) > 0:
-            gallery = []
-            for slide in tt_gallery_slides:
-                gallery.append({
-                    'url': slide['display_image']['url_list'][-1],
-                    'width': slide['display_image']['width'],
-                    'height': slide['display_image']['height']
+        if 'image_post_info' in aweme_detail:
+            tt_gallery_slides = aweme_detail['image_post_info']['images']
+
+            if len(tt_gallery_slides) > 0:
+                gallery = []
+                for slide in tt_gallery_slides:
+                    gallery.append({
+                        'url': slide['display_image']['url_list'][-1],
+                        'width': slide['display_image']['width'],
+                        'height': slide['display_image']['height']
+                    })
+
+                extracted.update({
+                    'gallery_post': gallery,
                 })
-
-            extracted.update({
-                'gallery_post': gallery,
-            })
         
         return extracted
         # return 
